@@ -175,7 +175,11 @@ func (p *WsFederation) decodeResponse(resp []byte, opts *tokenParseOptions) (*To
 			vals = append(vals, val.Text())
 		}
 
-		claims.Attributes[name] = vals
+		if _, ok := claims.Attributes[name]; ok {
+			claims.Attributes[name] = append(claims.Attributes[name], vals...)
+		} else {
+			claims.Attributes[name] = vals
+		}
 	}
 
 	return &Token{
